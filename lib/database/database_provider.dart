@@ -22,7 +22,9 @@ class DatabaseProvider {
         await $FloorAppDatabase.databaseBuilder('contact.db').build();
     _appDatabase = await database;
 
-   /* final contactDao = database.contactDao;
+   /*
+    // Test data for database
+    final contactDao = database.contactDao;
     final contact = Contact(id: 1, name: 'Raisul', mobile: '013026998217');
     final contact1 = Contact(id: 2, name: 'Raisul', mobile: '013026998217');
     final contact2 = Contact(id: 3, name: 'Raisul', mobile: '013026998217');
