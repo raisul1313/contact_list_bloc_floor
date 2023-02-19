@@ -1,14 +1,17 @@
+import 'package:contact_list/contacts/model/dto/contact.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class ContactListItem extends StatelessWidget {
   final Function deleteItem;
   final Function updateItem;
+  final Contact contact;
 
   const ContactListItem({
     Key? key,
     required this.deleteItem,
     required this.updateItem,
+    required this.contact,
   }) : super(key: key);
 
   @override
@@ -24,8 +27,8 @@ class ContactListItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              height: pageHeight * 0.05,
-              width: pageWidth * 0.1,
+              height: pageHeight * 0.07,
+              width: pageWidth * 0.14,
               margin: EdgeInsets.only(right: 10.0),
               decoration: BoxDecoration(
                   color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
@@ -33,58 +36,45 @@ class ContactListItem extends StatelessWidget {
                   shape: BoxShape.circle),
               child: Center(
                   child: Text(
-                'A',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                contact.name![0].toUpperCase(),
+                style: TextStyle(fontSize: 25, color: Colors.white),
               )),
             ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name'.toUpperCase(),
+                  Text(
+                      contact.name![0].toUpperCase() +
+                          contact.name!.substring(1),
                       style: const TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w500),
+                          color: Colors.black, fontWeight: FontWeight.w600),
                       overflow: TextOverflow.ellipsis),
                   SizedBox(
                     height: pageHeight * 0.006,
                   ),
-                  Text('Mobile Number',
+                  Text('0${contact.mobile!}',
                       style: const TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.grey,
+                          fontSize: 13.0,
+                          color: Colors.black,
                           fontWeight: FontWeight.w500),
                       overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
             PopupMenuButton(
-              elevation: 2,
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 1,
-                  child: Text(
-                    'update',
-                    style: const TextStyle(
-                        color: Colors.purple, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 2,
-                  child: Text(
-                    'delete',
-                    style: TextStyle(
-                        color: Colors.purple, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ],
-              onSelected: (value) {
-                if (value == 2) {
-                  updateItem();
-                } else if (value == 3) {
-                  deleteItem();
-                }
-              },
-            ),
+                itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Text("Update"),
+                        value: 1,
+                        onTap: () => updateItem(contact),
+                      ),
+                      PopupMenuItem(
+                        child: Text("Delete"),
+                        value: 2,
+                        onTap: () => deleteItem(contact),
+                      )
+                    ]),
           ],
         ),
       ),

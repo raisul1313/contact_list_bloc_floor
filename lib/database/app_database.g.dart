@@ -112,6 +112,16 @@ class _$ContactDao extends ContactDao {
                   'name': item.name,
                   'mobile': item.mobile
                 },
+            changeListener),
+        _contactDeletionAdapter = DeletionAdapter(
+            database,
+            'Contact',
+            ['id'],
+            (Contact item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'mobile': item.mobile
+                },
             changeListener);
 
   final sqflite.DatabaseExecutor database;
@@ -121,6 +131,8 @@ class _$ContactDao extends ContactDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<Contact> _contactInsertionAdapter;
+
+  final DeletionAdapter<Contact> _contactDeletionAdapter;
 
   @override
   Stream<List<Contact>> listenContact() {
@@ -134,8 +146,13 @@ class _$ContactDao extends ContactDao {
   }
 
   @override
-  Future<List<int>> insertContact(List<Contact> contact) {
+  Future<List<int>> insertContact(List<Contact> contactList) {
     return _contactInsertionAdapter.insertListAndReturnIds(
-        contact, OnConflictStrategy.replace);
+        contactList, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteContact(Contact contact) async {
+    await _contactDeletionAdapter.delete(contact);
   }
 }

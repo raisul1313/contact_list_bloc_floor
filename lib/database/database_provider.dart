@@ -1,4 +1,3 @@
-import 'package:contact_list/contacts/model/dto/contact.dart';
 import 'package:contact_list/database/app_database.dart';
 
 class DatabaseProvider {
@@ -20,26 +19,8 @@ class DatabaseProvider {
   _createDb() async {
     final database =
         await $FloorAppDatabase.databaseBuilder('contact.db').build();
-    _appDatabase = await database;
-
-   /*
-    // Test data for database
-    final contactDao = database.contactDao;
-    final contact = Contact(id: 1, name: 'Raisul', mobile: '013026998217');
-    final contact1 = Contact(id: 2, name: 'Raisul', mobile: '013026998217');
-    final contact2 = Contact(id: 3, name: 'Raisul', mobile: '013026998217');
-    final contact3 = Contact(id: 4, name: 'Raisul', mobile: '013026998217');
-    final contact4 = Contact(id: 5, name: 'Raisul', mobile: '013026998217');
-    final List<Contact> contactList = [];
-    contactList.add(contact);
-    contactList.add(contact1);
-    contactList.add(contact2);
-    contactList.add(contact3);
-    contactList.add(contact4);
-
-    await contactDao.insertContact(contactList);*/
+    _appDatabase = database;
   }
-
 
   static DatabaseProvider getState() {
     _instance ??= DatabaseProvider._internal();

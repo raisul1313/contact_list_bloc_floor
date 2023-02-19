@@ -1,3 +1,5 @@
+import 'package:contact_list/contacts/bloc/contact_bloc.dart';
+import 'package:contact_list/contacts/model/dto/contact.dart';
 import 'package:contact_list/custom_ui/custom_button.dart';
 import 'package:contact_list/custom_ui/custom_header.dart';
 import 'package:contact_list/custom_ui/custom_text_form_field.dart';
@@ -15,6 +17,16 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   late double _width;
   bool _autoValidate = false;
   final _bottomSheetFormGlobalKey = GlobalKey<FormState>();
+  late ContactBloc _contactBloc;
+
+  String? contactName;
+  String? contactMobile;
+
+  @override
+  void initState() {
+    super.initState();
+    _contactBloc = ContactBloc();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +59,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
             CustomTextFormField(
               label: 'Name',
               inputType: TextInputType.name,
-              //onSaved: _onNameSaved,
+              onSaved: _onNameSaved,
               validator: (value) {
                 if (value.toString().isEmpty) {
                   return 'Can not be Empty';
@@ -65,7 +77,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
               label: 'Mobile Number',
               prefixText: '+880 ',
               inputType: TextInputType.phone,
-              //onSaved: _onMobileNumberSaved,
+              onSaved: _onMobileNumberSaved,
               validator: (value) {
                 if (value.toString().isEmpty) {
                   return 'Can not be Empty';
@@ -89,14 +101,23 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
     return CustomButton(onButtonPressed: _addButtonClicked, buttonName: 'Add');
   }
 
-  _addButtonClicked() {
+  _addButtonClicked() async {
     FocusScope.of(context).unfocus();
     if (_bottomSheetFormGlobalKey.currentState!.validate()) {
       _bottomSheetFormGlobalKey.currentState?.save();
+      Contact contact = Contact(mobile: contactMobile, name: contactName);
+      List<Contact> contactList = [];
+      contactList.add(contact);
+      await _contactBloc.insertContactLocal(contactList);
+      Navigator.pop(context);
     }
 
     setState(() {
       _autoValidate = true;
     });
   }
+
+  _onNameSaved(String name) => contactName = name;
+
+  _onMobileNumberSaved(String mobileName) => contactMobile = mobileName;
 }
